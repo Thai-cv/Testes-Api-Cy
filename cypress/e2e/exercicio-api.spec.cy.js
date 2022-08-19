@@ -19,23 +19,12 @@ describe('Testes da Funcionalidade Usuários', () => {
       }).then((response) => {
           expect(response.status).to.equal(200)
           expect(response.body).to.have.property('usuarios')
-          expect(response.duration).to.be.lessThan(50)
+          expect(response.duration).to.be.lessThan(150)
       })
     });
 
     it('Deve cadastrar um usuário com sucesso', () => {
-     let nomeFaker = faker.name.firstName()
-     let emailFaker = faker.internet.email()
-     cy.request({
-          method: 'POST',
-          url: 'usuarios',
-          body: {
-               "nome": nomeFaker,
-               "email": emailFaker,
-               "password": "teste",
-               "administrador": "true"
-             },
-      }).then((response) => {
+    cy.cadastrarUsuario().then((response) => {
           expect(response.status).to.equal(201)
           expect(response.body.message).to.equal("Cadastro realizado com sucesso")
       })
@@ -46,24 +35,24 @@ describe('Testes da Funcionalidade Usuários', () => {
           method: 'POST',
           url: 'usuarios',
           body: {
-               "nome": "Fulano da Silva",
-               "email": "beltrano@qa.com.br",
+               "nome": "Eduardo Oliveira",
+               "email": "eduardoqa#teste",
                "password": "teste",
                "administrador": "true"
              },  failOnStatusCode: false 
       
           }).then((response) => {
           expect(response.status).to.equal(400)
-          expect(response.body.message).to.equal("Este email já está sendo usado")
+          expect(response.body.email).to.equal('email deve ser um email válido')
      })
     
     });
 
     it('Deve editar um usuário previamente cadastrado', () => {
-     let nomeFaker = faker.name.firstName()
-     let emailFaker = faker.internet.email()
-     cy.request('usuarios').then(response => {
-          let id = response.body.usuarios[0]._id
+        let nomeFaker = faker.name.firstName()
+        let emailFaker = faker.internet.email()
+        cy.cadastrarUsuario().then(response => { 
+            let id = response.body._id
           cy.request({
               method: 'PUT', 
               url: `usuarios/${id}`,
@@ -83,8 +72,8 @@ describe('Testes da Funcionalidade Usuários', () => {
     });
 
     it('Deve deletar um usuário previamente cadastrado', () => {
-     cy.request('usuarios').then(response => {
-         let id = response.body.usuarios[5]._id
+        cy.cadastrarUsuario().then(response => { 
+            let id = response.body._id
          cy.request({
           method: 'DELETE',
           url: `usuarios/${id}`,

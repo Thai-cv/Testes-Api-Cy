@@ -50,4 +50,22 @@ Cypress.Commands.add('token', (email, senha) => {
           }, 
           failOnStatusCode: false
     })
- })
+})
+
+    Cypress.Commands.add('cadastrarUsuario' , () =>{
+        var faker = require('faker');
+        let nomeFaker = faker.name.firstName()
+        let emailFaker = faker.internet.email()
+        cy.request({
+            method: 'POST', 
+            url: 'usuarios',
+            body: {
+                "nome": nomeFaker,
+                "email": emailFaker,
+                "password": "teste",
+                "administrador": "true"
+              }
+        })
+
+    })
+
