@@ -19,7 +19,7 @@ describe('Testes da Funcionalidade Usuários', () => {
       }).then((response) => {
           expect(response.status).to.equal(200)
           expect(response.body).to.have.property('usuarios')
-          expect(response.duration).to.be.lessThan(150)
+          expect(response.duration).to.be.lessThan(450)
       })
     });
 
